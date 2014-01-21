@@ -2,6 +2,7 @@ require 'time'
 
 module Venice
   class Receipt
+    attr_reader :bundle_id
     # The number of items purchased. This value corresponds to the quantity property of the SKPayment object stored in the transaction’s payment property.
     attr_reader :quantity
 
@@ -39,6 +40,8 @@ module Venice
     attr_reader :expires_at
 
     def initialize(attributes = {})
+      @bundle_id = attributes['bundle_id'] if attributes['bundle_id']
+      attributes = attributes['in_app'].first if attributes['in_app']
       @quantity = Integer(attributes['quantity']) if attributes['quantity']
       @product_id = attributes['product_id']
       @transaction_id = attributes['transaction_id']
@@ -63,6 +66,7 @@ module Venice
 
     def to_h
       {
+        :bundle_id => @bundle_id,
         :quantity => @quantity,
         :product_id => @product_id,
         :transaction_id => @transaction_id,
